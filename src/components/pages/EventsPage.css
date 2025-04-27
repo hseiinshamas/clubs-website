@@ -1,0 +1,28 @@
+/* EventsPage.css */
+.events-page {
+  padding: 4rem 2rem;
+  /* Dark gradient like your Clubs page */
+  background: linear-gradient(135deg, #141e30, #243b55);
+  min-height: 100vh;
+}
+
+
+  .events-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 100px auto 2rem; /* added top margin here */
+  }
+  .events-header h1 {
+    font-size: 48px;
+    color: #e2d9d9;
+  }
+  .events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  

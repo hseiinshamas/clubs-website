@@ -1,0 +1,122 @@
+
+
+.manage-clubs-container {
+    padding: 40px 60px;
+    margin-top: 80px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9f9f9;
+    min-height: 100vh;
+  }
+  
+  .manage-clubs-container h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #222;
+  }
+  
+  .add-club-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+  }
+  
+  .add-club-form input,
+  .add-club-form textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    resize: none;
+  }
+  
+  .add-club-form button {
+    align-self: flex-start;
+    padding: 10px 20px;
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .add-club-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .clubs-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .manage-club-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+  
+  .club-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .club-card h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+  }
+  
+  .club-card p {
+    margin: 10px 0 20px;
+    color: #666;
+  }
+  
+  .club-card input,
+  .club-card textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .club-card button {
+    margin-right: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s ease;
+  }
+  
+  .club-card button:nth-child(3),
+  .club-card button:nth-child(4) {
+    background-color: #ffc107;
+    color: #fff;
+  }
+  
+  .club-card button:nth-child(3):hover,
+  .club-card button:nth-child(4):hover {
+    background-color: #e0a800;
+  }
+  
+  .club-card button:last-child {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .club-card button:last-child:hover {
+    background-color: #c82333;
+  }
+  

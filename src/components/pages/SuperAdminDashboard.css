@@ -1,0 +1,47 @@
+.super-admin-container {
+  margin-top: 80px; /* Adjust based on your actual navbar height */
+  text-align: center;
+  padding: 20px;
+}
+
+  
+  .super-admin-container h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+    color: #010107;
+  }
+  
+  .super-admin-container .tagline {
+    font-size: 18px;
+    margin-bottom: 40px;
+    color: #555;
+  }
+  
+  .dashboard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+  
+  .dashboard-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 40px 30px;
+    width: 260px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  
+  .dashboard-card:hover {
+    background: #6366f1;
+    color: #fff;
+    transform: translateY(-5px);
+  }
+  
+  .dashboard-card h3 {
+    margin-top: 20px;
+    font-size: 20px;
+  }
+  

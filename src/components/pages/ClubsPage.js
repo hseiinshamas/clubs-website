@@ -1,47 +1,96 @@
-import React from 'react';
+// src/components/pages/ClubsPage.js
+import React, { useState, useEffect } from 'react';
 import './ClubPage.css';
-import { Button } from '../Button'; // Adjust the import path as needed
-
-const clubsData = [
-  {
-    name: 'Pharmacy Club',
-    image: '/images/img-19.jpg',
-    description: 'Join us for jam sessions, open mics, and music production workshops.'
-  },
-  {
-    name: 'Theatre Club',
-    image: '/images/img-12.jpg',
-    description: 'We care for animals on and off campus. Join our awareness and rescue drives.'
-  },
-  {
-    name: 'Music Club',
-    image: '/images/img-11.jpg',
-    description: 'Capture moments and learn professional photography tips with us.'
-  },
-  {
-    name: 'Book Club',
-    image: '/images/book-club.jpg',
-    description: 'Dive into books, hold reading sessions, and share literary discussions.'
-  }
-];
+import axios from 'axios';
+import { FaInfoCircle } from 'react-icons/fa';
+import { Tooltip } from 'react-tooltip';
 
 function ClubsPage() {
+  const [clubs, setClubs] = useState([]);
+  const [membershipStatuses, setMembershipStatuses] = useState({});
+
+  const studentId = localStorage.getItem('studentId');
+  const firstName = localStorage.getItem('firstName');
+  const lastName = localStorage.getItem('lastName');
+  const major = localStorage.getItem('major');
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/clubs')
+      .then((res) => setClubs(res.data))
+      .catch((err) => console.error('Error fetching clubs:', err));
+
+    if (studentId) {
+      axios
+        .get(`http://localhost:5000/api/membership-requests/student/${studentId}`)
+        .then((res) => {
+          const statuses = {};
+          res.data.forEach((request) => {
+            statuses[request.club_id] = request.status;
+          });
+          setMembershipStatuses(statuses);
+        })
+        .catch((err) => console.error('Error fetching membership statuses:', err));
+    }
+  }, [studentId]);
+
+  const handleJoinClick = async (club) => {
+    if (!firstName || !lastName || !major || !studentId) {
+      alert('Missing user information. Please login again.');
+      return;
+    }
+
+    try {
+      await axios.post('http://localhost:5000/api/membership-requests', {
+        club_id: club.id,
+        first_name: firstName,
+        last_name: lastName,
+        major: major,
+        student_id: studentId,
+      });
+
+      // Instantly show Pending Approval
+      setMembershipStatuses((prev) => ({
+        ...prev,
+        [club.id]: 'pending',
+      }));
+
+      alert('Request submitted! Awaiting approval.');
+    } catch (error) {
+      console.error('Error submitting request:', error);
+      alert('Failed to submit request.');
+    }
+  };
+
   return (
     <div className="clubs-container">
       <h1>Our Clubs</h1>
       <div className="clubs-grid">
-        {clubsData.map((club, index) => (
-          <div className="club-card" key={index}>
-            <img src={club.image} alt={club.name} />
-            <h2>{club.name}</h2>
-            <p>{club.description}</p>
-            <Button 
-              buttonStyle='btn--primary' 
-              buttonSize='btn--medium'
-              to='/join-request' // you can set this to your request form page
+        {clubs.map((club) => (
+          <div className="club-card" key={club.id}>
+            <img src={club.image_url} alt={club.name} />
+
+            <div className="club-title">
+              <h2>{club.name}</h2>
+              <FaInfoCircle
+                data-tooltip-id={`tooltip-${club.id}`}
+                data-tooltip-content={club.description}
+                className="info-icon"
+              />
+              <Tooltip id={`tooltip-${club.id}`} place="top" className="custom-tooltip" />
+            </div>
+
+            <button
+              className="btn-primary"
+              onClick={() => handleJoinClick(club)}
+              disabled={membershipStatuses[club.id] === 'pending' || membershipStatuses[club.id] === 'joined'}
             >
-              Join Club
-            </Button>
+              {membershipStatuses[club.id] === 'pending'
+                ? 'Pending Approval'
+                : membershipStatuses[club.id] === 'joined'
+                ? 'Joined'
+                : 'Join Club'}
+            </button>
           </div>
         ))}
       </div>

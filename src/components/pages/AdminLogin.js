@@ -1,27 +1,49 @@
-// src/components/pages/AdminLogin.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminLogin.css';
+import { FaUserShield } from 'react-icons/fa';
+import axios from 'axios';
 
 function AdminLogin() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (name === 'admin' && password === '1234') {
-      navigate('/admin-dashboard');
-    } else {
-      alert('Invalid credentials');
+  
+    try {
+      const res = await axios.post('http://localhost:5000/api/admin/login', {
+        name,
+        password,
+      });
+      
+      // Assuming the response contains a JWT token
+      if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+        localStorage.setItem('role', res.data.role);
+        localStorage.setItem('clubId', res.data.clubId); // 👈 This is the missing piece!
+      
+        if (res.data.role === 'superadmin') {
+          navigate('/super-admin-dashboard');
+        } else {
+          navigate('/admin-dashboard');
+        }
+      }
+       else {
+        alert('Login failed: Invalid credentials');
+      }
+    } catch (error) {
+      console.error('Login error: ', error);
+      alert('Login failed');
     }
   };
 
   return (
     <div className="admin-login-container">
       <form className="login-card" onSubmit={handleSubmit}>
-        <h2>Admin Login</h2>
+        <FaUserShield size={60} color="#fff" style={{ margin: '0 auto 20px' }} />
+        <h2>Admin Portal</h2>
         <div className="input-group">
           <label>Name</label>
           <input 

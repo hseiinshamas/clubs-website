@@ -1,0 +1,130 @@
+.admin-dashboard {
+    max-width: 1000px;
+    margin: 100px auto;
+    padding: 2rem;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fa;
+  }
+  
+  .admin-dashboard h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .add-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+  }
+  
+  .add-form input,
+  .add-form select {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    flex: 1 1 200px;
+    background-color: white;
+  }
+  
+  .add-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s;
+  }
+  
+  .add-form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .admin-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .admin-card {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+    padding: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+  }
+  
+  .admin-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .profile-circle {
+    background: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1rem;
+  }
+  
+  .admin-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .admin-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  
+  .role-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 5px;
+    text-transform: capitalize;
+  }
+  
+  .role-badge.admin {
+    background-color: #e0f3ff;
+    color: #007bff;
+  }
+  
+  .role-badge.superadmin {
+    background-color: #ffe0e0;
+    color: #dc3545;
+  }
+  
+  .delete-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 0.7rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .delete-btn:hover {
+    background-color: #b02a37;
+  }
+  
