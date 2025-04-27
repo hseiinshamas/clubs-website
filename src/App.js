@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
+import AcceptedMembersPage from './components/pages/AcceptedMembersPage';
+
 
 import Home from './components/pages/Home';
 import AdminLogin from './components/pages/AdminLogin';
@@ -18,6 +20,9 @@ import EditClubDetails from './components/pages/EditClubDetails';
 import UserLogin from './components/pages/UserLogin';
 import UserSignup from './components/pages/UserSignup';
 import MembershipRequestsPage from './components/pages/MembershipRequestsPage';
+import ManagePanel from './components/pages/ManagePanel'; // import it
+import ProtectedAdminRoute from './components/ProtectedAdminRoute'; 
+
 
 function App() {
   return (
@@ -30,6 +35,16 @@ function App() {
             <Route path="/user-login" element={<UserLogin />} />
             <Route path="/user-signup" element={<UserSignup />} />
             <Route path="/login-as-admin" element={<AdminLogin />} />
+
+            <Route 
+  path="/accepted-members" 
+  element={
+    <ProtectedRoute>
+      <AcceptedMembersPage />
+    </ProtectedRoute>
+  } 
+/>
+
 
             {/* Protected routes */}
             <Route 
@@ -64,46 +79,51 @@ function App() {
                 </ProtectedRoute>
               } 
             />
-            <Route 
+            {/* <Route 
               path="/admin-dashboard" 
               element={
                 <ProtectedRoute>
                   <AdminDashboard />
                 </ProtectedRoute>
               } 
-            />
-            <Route 
+            /> */}
+            {/* <Route 
               path="/super-admin-dashboard" 
               element={
                 <ProtectedRoute>
                   <SuperAdminDashboard />
                 </ProtectedRoute>
               } 
-            />
+            /> */}
+
+<Route path="/manage-panel" element={<ManagePanel />} />
             <Route 
-              path="/manage-clubs" 
-              element={
-                <ProtectedRoute>
-                  <ManageClubs />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/manage-admins" 
-              element={
-                <ProtectedRoute>
-                  <ManageAdmins />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/admin/manage-club/:id" 
-              element={
-                <ProtectedRoute>
-                  <EditClubDetails />
-                </ProtectedRoute>
-              } 
-            />
+  path="/manage-clubs" 
+  element={
+    <ProtectedAdminRoute>
+      <ManageClubs />
+    </ProtectedAdminRoute>
+  }
+/>
+
+<Route 
+  path="/manage-admins" 
+  element={
+    <ProtectedAdminRoute>
+      <ManageAdmins />
+    </ProtectedAdminRoute>
+  }
+/>
+
+<Route 
+  path="/admin/manage-club/:id" 
+  element={
+    <ProtectedAdminRoute>
+      <EditClubDetails />
+    </ProtectedAdminRoute>
+  }
+/>
+
                 <Route 
                   path="/membership-requests" 
                   element={

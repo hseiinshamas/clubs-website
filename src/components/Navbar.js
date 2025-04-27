@@ -7,7 +7,7 @@ function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
   const navigate = useNavigate();
-  const role = localStorage.getItem('role'); // ✅ get the role once
+  const role = localStorage.getItem('role'); // ✅ Get user role
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
@@ -22,9 +22,12 @@ function Navbar() {
 
   useEffect(() => {
     showButton();
-  }, []);
+    window.addEventListener('resize', showButton);
 
-  window.addEventListener('resize', showButton);
+    return () => {
+      window.removeEventListener('resize', showButton);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -45,42 +48,58 @@ function Navbar() {
           </div>
 
           <ul className={click ? 'nav-menu active' : 'nav-menu'}>
-            <li className='nav-item'>
-              <Link to='/' className='nav-links' onClick={closeMobileMenu}> Home </Link>
+            <li className="nav-item">
+              <Link to="/" className="nav-links" onClick={closeMobileMenu}>
+                Home
+              </Link>
             </li>
 
-            <li className='nav-item'>
-              <Link to='/events' className='nav-links' onClick={closeMobileMenu}> Events </Link>
+            <li className="nav-item">
+              <Link to="/events" className="nav-links" onClick={closeMobileMenu}>
+                Events
+              </Link>
             </li>
 
-            <li className='nav-item'>
-              <Link to='/clubs' className='nav-links' onClick={closeMobileMenu}> Clubs </Link>
+            <li className="nav-item">
+              <Link to="/clubs" className="nav-links" onClick={closeMobileMenu}>
+                Clubs
+              </Link>
             </li>
 
-            {/* ✅ Show Manage Requests only if admin or superadmin */}
+            {/* ✅ ONLY show Manage Panel if Admin or Superadmin */}
             {(role === 'admin' || role === 'superadmin') && (
-              <li className='nav-item'>
-                <Link to='/membership-requests' className='nav-links' onClick={closeMobileMenu}>
-                  Manage Requests
+              <li className="nav-item">
+                <Link to="/manage-panel" className="nav-links" onClick={closeMobileMenu}>
+                  Manage Panel
                 </Link>
               </li>
             )}
 
-            <li className='nav-item'>
-              <span className='nav-links' style={{ cursor: 'pointer' }} onClick={() => { closeMobileMenu(); handleLogout(); }}>
+            {/* Logout Button Always */}
+            <li className="nav-item">
+              <span
+                className="nav-links"
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  closeMobileMenu();
+                  handleLogout();
+                }}
+              >
                 Logout
               </span>
             </li>
 
-            <li className='nav-item'>
-              <Link to='/login-as-admin' className='nav-links-mobile' onClick={closeMobileMenu}>
+            {/* Login as Admin (Mobile View) */}
+            <li className="nav-item">
+              <Link to="/login-as-admin" className="nav-links-mobile" onClick={closeMobileMenu}>
                 Login As Admin
               </Link>
             </li>
           </ul>
 
+          {/* Desktop View Admin Button */}
           {button && (
-            <Button buttonStyle='btn--outline' to='/login-as-admin'>
+            <Button buttonStyle="btn--outline" to="/login-as-admin">
               Login As Admin
             </Button>
           )}

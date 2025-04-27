@@ -27,7 +27,7 @@ function AdminLogin() {
         if (res.data.role === 'superadmin') {
           navigate('/super-admin-dashboard');
         } else {
-          navigate('/admin-dashboard');
+          navigate('/');
         }
       }
        else {

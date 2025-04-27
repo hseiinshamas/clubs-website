@@ -98,9 +98,28 @@ router.put('/:id/approve', (req, res) => {
         console.error('Error approving request:', err);
         return res.status(500).json({ error: 'Database error' });
       }
-      res.json({ message: 'Membership request approved' });
+      res.status(200).json({ message: 'Membership request approved' });
     }
   );
 });
+
+
+// Get all accepted members (status = 'joined')
+router.get('/accepted', (req, res) => {
+  db.query(
+    `SELECT membership_requests.*, clubs.name AS club_name 
+     FROM membership_requests
+     JOIN clubs ON membership_requests.club_id = clubs.id
+     WHERE status = 'joined'`,
+    (err, results) => {
+      if (err) {
+        console.error('Error fetching accepted members:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+      res.json(results);
+    }
+  );
+});
+
 
 module.exports = router;
