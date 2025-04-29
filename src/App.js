@@ -23,6 +23,14 @@ import MembershipRequestsPage from './components/pages/MembershipRequestsPage';
 import ManagePanel from './components/pages/ManagePanel'; // import it
 import ProtectedAdminRoute from './components/ProtectedAdminRoute'; 
 
+const token = localStorage.getItem('token');
+const expiration = localStorage.getItem('expiration');
+
+if (expiration && new Date().getTime() > parseInt(expiration)) {
+  localStorage.clear();
+  window.location.href = '/user-login';
+}
+
 
 function App() {
   return (

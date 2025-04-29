@@ -1,36 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
 import { Button } from './Button';
 
 function Navbar() {
   const [click, setClick] = useState(false);
   const [button, setButton] = useState(true);
+  const [userRole, setUserRole] = useState(localStorage.getItem('role'));
+  const [firstName, setFirstName] = useState(localStorage.getItem('firstName'));
+
   const navigate = useNavigate();
-  const role = localStorage.getItem('role'); // ✅ Get user role
+  const location = useLocation();
 
   const handleClick = () => setClick(!click);
   const closeMobileMenu = () => setClick(false);
 
   const showButton = () => {
-    if (window.innerWidth <= 960) {
-      setButton(false);
-    } else {
-      setButton(true);
-    }
+    setButton(window.innerWidth > 960);
   };
 
   useEffect(() => {
     showButton();
     window.addEventListener('resize', showButton);
-
-    return () => {
-      window.removeEventListener('resize', showButton);
-    };
+    return () => window.removeEventListener('resize', showButton);
   }, []);
+
+  // 🔁 Re-check storage on every route change
+  useEffect(() => {
+    setUserRole(localStorage.getItem('role'));
+    setFirstName(localStorage.getItem('firstName'));
+  }, [location.pathname]);
 
   const handleLogout = () => {
     localStorage.clear();
+    setUserRole(null);
+    setFirstName(null);
     navigate('/user-login');
   };
 
@@ -66,8 +70,7 @@ function Navbar() {
               </Link>
             </li>
 
-            {/* ✅ ONLY show Manage Panel if Admin or Superadmin */}
-            {(role === 'admin' || role === 'superadmin') && (
+            {(userRole === 'admin' || userRole === 'superadmin') && (
               <li className="nav-item">
                 <Link to="/manage-panel" className="nav-links" onClick={closeMobileMenu}>
                   Manage Panel
@@ -75,33 +78,41 @@ function Navbar() {
               </li>
             )}
 
-            {/* Logout Button Always */}
-            <li className="nav-item">
-              <span
-                className="nav-links"
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  closeMobileMenu();
-                  handleLogout();
-                }}
-              >
-                Logout
-              </span>
-            </li>
+            {(userRole || firstName) && (
+              <li className="nav-item">
+                <span
+                  className="nav-links"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => {
+                    closeMobileMenu();
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </span>
+              </li>
+            )}
 
-            {/* Login as Admin (Mobile View) */}
-            <li className="nav-item">
-              <Link to="/login-as-admin" className="nav-links-mobile" onClick={closeMobileMenu}>
-                Login As Admin
-              </Link>
-            </li>
+            {!userRole && (
+              <li className="nav-item">
+                <Link to="/login-as-admin" className="nav-links-mobile" onClick={closeMobileMenu}>
+                  Login As Admin
+                </Link>
+              </li>
+            )}
           </ul>
 
-          {/* Desktop View Admin Button */}
+          {/* Desktop Greeting or Button */}
           {button && (
-            <Button buttonStyle="btn--outline" to="/login-as-admin">
-              Login As Admin
-            </Button>
+            userRole === 'admin' || userRole === 'superadmin' ? (
+              <span className="admin-greeting">👤 Admin</span>
+            ) : userRole === 'student' && firstName ? (
+              <span className="admin-greeting">👤 {firstName}</span>
+            ) : (
+              <Button buttonStyle="btn--outline" to="/login-as-admin">
+                Login As Admin
+              </Button>
+            )
           )}
         </div>
       </nav>

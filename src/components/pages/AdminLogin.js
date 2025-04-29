@@ -17,20 +17,19 @@ function AdminLogin() {
         name,
         password,
       });
-      
-      // Assuming the response contains a JWT token
+  
       if (res.data.token) {
+        // ✅ Save everything to sessionStorage (auto-clears on close)
         localStorage.setItem('token', res.data.token);
         localStorage.setItem('role', res.data.role);
-        localStorage.setItem('clubId', res.data.clubId); // 👈 This is the missing piece!
-      
+        localStorage.setItem('clubId', res.data.clubId);
+  
         if (res.data.role === 'superadmin') {
           navigate('/super-admin-dashboard');
         } else {
           navigate('/');
         }
-      }
-       else {
+      } else {
         alert('Login failed: Invalid credentials');
       }
     } catch (error) {
@@ -38,7 +37,6 @@ function AdminLogin() {
       alert('Login failed');
     }
   };
-
   return (
     <div className="admin-login-container">
       <form className="login-card" onSubmit={handleSubmit}>

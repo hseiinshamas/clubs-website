@@ -24,13 +24,15 @@ function UserLogin() {
         localStorage.setItem('userId', data.userId);
         localStorage.setItem('studentId', data.studentId);
         localStorage.setItem('role', data.role);
-        
-        // ✅ NEW: Save firstName, lastName, major
         localStorage.setItem('firstName', data.firstName);
         localStorage.setItem('lastName', data.lastName);
         localStorage.setItem('major', data.major);
   
-        navigate('/'); 
+        // ✅ NEW: Set expiration time (1 hour)
+        const expirationTime = new Date().getTime() + 60 * 60 * 1000; // 1 hour in milliseconds
+        localStorage.setItem('expiration', expirationTime);
+  
+        navigate('/');
       } else {
         alert(data.error || 'Login failed');
       }
