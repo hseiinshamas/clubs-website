@@ -32,10 +32,17 @@ function ManagePanel() {
           <h2>Accepted Members</h2>
         </Link>
 
-        <Link to="/events" className="manage-card">
-          <FaCalendarAlt className="manage-card-icon" />
-          <h2>Manage Events</h2>
-        </Link>
+        <Link to="/manage-events" className="manage-card">
+  <div className="icon-circle">
+    <i className="fas fa-calendar-alt"></i>
+  </div>
+  <h3>Manage Events</h3>
+  <p>Create and manage events</p>
+</Link>
+
+
+
+      
       </div>
     </div>
   );

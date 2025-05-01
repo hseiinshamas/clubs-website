@@ -114,6 +114,11 @@ app.use(cors());
 app.use(express.json());
 
 
+const userEventsRoutes = require('./routes/userEvents');
+app.use('/api/events', userEventsRoutes);
+
+
+
 const adminRoutes = require('./routes/admins');
 app.use('/api/admins', adminRoutes);
 

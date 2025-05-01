@@ -21,6 +21,21 @@ const ManageClubs = () => {
     fetchClubs();
   }, []);
 
+  const handleImageUpload = (e, isEdit = false) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (isEdit) {
+        setEditedClub((prev) => ({ ...prev, image_url: reader.result }));
+      } else {
+        setNewClub((prev) => ({ ...prev, image_url: reader.result }));
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleAddClub = async () => {
     if (!newClub.name || !newClub.description || !newClub.image_url) return;
     try {
@@ -67,12 +82,8 @@ const ManageClubs = () => {
           value={newClub.description}
           onChange={(e) => setNewClub({ ...newClub, description: e.target.value })}
         />
-        <input
-          type="text"
-          placeholder="Image URL"
-          value={newClub.image_url}
-          onChange={(e) => setNewClub({ ...newClub, image_url: e.target.value })}
-        />
+        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e)} />
+        {newClub.image_url && <img src={newClub.image_url} alt="Preview" style={{ width: '100px', marginTop: '10px' }} />}
         <button onClick={handleAddClub}>Add Club</button>
       </div>
 
@@ -90,12 +101,14 @@ const ManageClubs = () => {
                   value={editedClub.description}
                   onChange={(e) => setEditedClub({ ...editedClub, description: e.target.value })}
                 />
-                <input
-                  type="text"
-                  placeholder="Image URL"
-                  value={editedClub.image_url}
-                  onChange={(e) => setEditedClub({ ...editedClub, image_url: e.target.value })}
-                />
+                <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e, true)} />
+                {editedClub.image_url && (
+                  <img
+                    src={editedClub.image_url}
+                    alt="Preview"
+                    style={{ width: '100px', marginTop: '10px' }}
+                  />
+                )}
                 <button onClick={() => handleUpdate(club.id)}>Save</button>
                 <button onClick={() => setEditingClubId(null)}>Cancel</button>
               </>

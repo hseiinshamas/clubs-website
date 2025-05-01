@@ -2,28 +2,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './EventsPage.css';
-import EventCard from '../common/EventCard'; // Correct path to EventCard.js
+import EventCard from '../common/EventCard';
 import { Button } from '../Button';
 
 function EventsPage() {
   const [events, setEvents] = useState([]);
-  // placeholder for admin check; wire this up to your auth later
-  const isAdmin = /* fetch from auth context */ false;
+  const role = localStorage.getItem('role');
+  const studentId = localStorage.getItem('studentId');
+  const isAdmin = role === 'admin' || role === 'superadmin';
 
   useEffect(() => {
-    // TODO: replace with real API call
-    setEvents([
-      {
-        id: 1,
-        title: 'Photography Workshop',
-        date: '2025-05-10T14:00',
-        location: 'Room 101',
-        image: '/images/photoworkshop.jpg',
-        description: 'Learn pro tips from our guest photographer.'
-      },
-      // …more sample events
-    ]);
-  }, []);
+    if (!studentId) return;
+
+    fetch(`http://localhost:5000/api/events/for-user/${studentId}`)
+      .then((res) => res.json())
+      .then(setEvents)
+      .catch((err) => console.error('Failed to load events', err));
+  }, [studentId]);
 
   return (
     <div className="events-page">
@@ -38,7 +33,7 @@ function EventsPage() {
         )}
       </div>
       <div className="events-grid">
-        {events.map(evt => (
+        {events.map((evt) => (
           <EventCard key={evt.id} {...evt} />
         ))}
       </div>
