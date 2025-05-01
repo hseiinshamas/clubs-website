@@ -2,6 +2,54 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/db');
 
+
+// Get events for a specific club (admin)
+router.get('/for-club/:clubId', (req, res) => {
+  const { clubId } = req.params;
+
+  db.query('SELECT * FROM events WHERE club_id = ?', [clubId], (err, results) => {
+    if (err) {
+      console.error('Error fetching events for club:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(results);
+  });
+});
+
+// Get all events (for superadmin)
+router.get('/all', (req, res) => {
+  db.query('SELECT * FROM events', (err, results) => {
+    if (err) {
+      console.error('Error fetching all events:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(results); // ✅ results should contain `id`
+  });
+});
+
+// DELETE /api/events/:id - Delete an event
+router.delete('/:id', (req, res) => {
+  const eventId = parseInt(req.params.id); // 🔥 Parse to ensure it's a number
+
+  if (isNaN(eventId)) {
+    return res.status(400).json({ error: 'Invalid event ID' });
+  }
+
+  db.query('DELETE FROM events WHERE id = ?', [eventId], (err, result) => {
+    if (err) {
+      console.error('Error deleting event:', err);
+      return res.status(500).json({ error: 'Failed to delete event' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    res.status(200).json({ message: 'Event deleted successfully' });
+  });
+});
+
+
 // ✅ GET events for clubs a user is joined in
 router.get('/for-user/:studentId', (req, res) => {
   const { studentId } = req.params;

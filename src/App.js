@@ -23,6 +23,7 @@ import AcceptedMembersPage from './components/pages/AcceptedMembersPage';
 import MembershipRequestsPage from './components/pages/MembershipRequestsPage';
 import UserLogin from './components/pages/UserLogin';
 import UserSignup from './components/pages/UserSignup';
+import EditEventPage from './components/pages/EditEventPage';
 
 const token = localStorage.getItem('token');
 const expiration = localStorage.getItem('expiration');
@@ -68,7 +69,9 @@ function App() {
               : <Navigate to="/user-login" />
             } 
           />
-
+          
+          <Route path="/events" element={<EventsPage />} />
+        <Route path="/events/edit/:id" element={<EditEventPage />} />
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />
 

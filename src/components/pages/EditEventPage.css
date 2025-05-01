@@ -1,0 +1,73 @@
+/* src/components/pages/EditEventPage.css */
+
+.edit-event-page {
+    max-width: 600px;
+    margin: 60px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .edit-event-page h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    color: #333;
+    text-align: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+  }
+  
+  .edit-event-page form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .edit-event-page label {
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #555;
+  }
+  
+  .edit-event-page input[type="text"],
+  .edit-event-page input[type="datetime-local"],
+  .edit-event-page textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 6px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  
+  .edit-event-page input:focus,
+  .edit-event-page textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .edit-event-page textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+  
+  .edit-event-page button[type="submit"] {
+    margin-right: 16px;
+    margin-top: 20px;
+    padding: 12px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .edit-event-page button[type="submit"]:hover {
+    background: #0056b3;
+  }
+  

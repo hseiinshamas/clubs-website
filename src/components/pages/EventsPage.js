@@ -12,13 +12,31 @@ function EventsPage() {
   const isAdmin = role === 'admin' || role === 'superadmin';
 
   useEffect(() => {
-    if (!studentId) return;
-
-    fetch(`http://localhost:5000/api/events/for-user/${studentId}`)
-      .then((res) => res.json())
-      .then(setEvents)
-      .catch((err) => console.error('Failed to load events', err));
-  }, [studentId]);
+    const fetchEvents = async () => {
+      let url = '';
+  
+      if (role === 'admin') {
+        const clubId = localStorage.getItem('clubId');
+        url = `http://localhost:5000/api/events/for-club/${clubId}`;
+      } else if (role === 'superadmin') {
+        url = `http://localhost:5000/api/events/all`;
+      } else if (studentId) {
+        url = `http://localhost:5000/api/events/for-user/${studentId}`;
+      }
+  
+      if (!url) return;
+  
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        setEvents(data);
+      } catch (err) {
+        console.error('Failed to load events', err);
+      }
+    };
+  
+    fetchEvents();
+  }, [role, studentId]);
 
   return (
     <div className="events-page">
@@ -33,9 +51,18 @@ function EventsPage() {
         )}
       </div>
       <div className="events-grid">
-        {events.map((evt) => (
-          <EventCard key={evt.id} {...evt} />
-        ))}
+      {events.map((evt) => (
+  <EventCard
+    key={evt.id}
+    id={evt.id}  // ✅ This was missing
+    title={evt.title}
+    date={evt.date}
+    location={evt.location}
+    description={evt.description}
+    image={evt.image_url}
+  />
+))}
+
       </div>
     </div>
   );

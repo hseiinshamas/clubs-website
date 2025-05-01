@@ -1,14 +1,12 @@
-// src/components/pages/MembershipRequestsPage.js
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
-import 'react-toastify/dist/ReactToastify.css';
-import './MembershipRequestsPage.css'; // we'll style it next
+import './MembershipRequestsPage.css';
 
 function MembershipRequestsPage() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [rejectingId, setRejectingId] = useState(null);
+  const [rejectReason, setRejectReason] = useState('');
 
   useEffect(() => {
     fetchRequests();
@@ -27,27 +25,41 @@ function MembershipRequestsPage() {
 
   const handleApprove = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/membership-requests/${id}/approve`);
+      await axios.post(`http://localhost:5000/api/email/approve/${id}`);
       fetchRequests();
     } catch (error) {
       console.error('Error approving:', error);
     }
   };
-  
-  
-  const handleReject = async (id) => {
+
+  const openRejectModal = (id) => {
+    setRejectingId(id);
+    setRejectReason('');
+  };
+
+  const handleRejectSubmit = async () => {
+    console.log('Sending rejection request...');
+    console.log({ id: rejectingId, reason: rejectReason });
+    if (!rejectReason.trim()) {
+      alert('Please provide a rejection reason.');
+      return;
+    }
     try {
-      const response = await axios.delete(`http://localhost:5000/api/membership-requests/${id}`);
-      if (response.status === 200) {
-        setRequests(prevRequests => prevRequests.filter(request => request.id !== id));
-      }
+      await axios.post(`http://localhost:5000/api/email/reject/${rejectingId}`, {
+        reason: rejectReason
+      });
+      setRejectingId(null);
+      fetchRequests();
     } catch (error) {
       console.error('Error rejecting:', error);
     }
   };
-  
-  
-  
+
+  const handleCancelReject = () => {
+    setRejectingId(null);
+    setRejectReason('');
+  };
+
   return (
     <div className="requests-container">
       <h1>Membership Requests</h1>
@@ -80,7 +92,7 @@ function MembershipRequestsPage() {
                   <button className="btn-approve" onClick={() => handleApprove(req.id)}>
                     Approve
                   </button>
-                  <button className="btn-reject" onClick={() => handleReject(req.id)}>
+                  <button className="btn-reject" onClick={() => openRejectModal(req.id)}>
                     Reject
                   </button>
                 </td>
@@ -88,6 +100,25 @@ function MembershipRequestsPage() {
             ))}
           </tbody>
         </table>
+      )}
+
+      {/* Modal */}
+      {rejectingId && (
+        <div className="modal-overlay">
+          <div className="modal-box">
+            <h2>Reject Request</h2>
+            <textarea
+              value={rejectReason}
+              onChange={(e) => setRejectReason(e.target.value)}
+              placeholder="Enter rejection reason"
+              rows={4}
+            />
+            <div className="modal-buttons">
+              <button className="btn-cancel" onClick={handleCancelReject}>Cancel</button>
+              <button className="btn-submit" onClick={handleRejectSubmit}>Send Rejection</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

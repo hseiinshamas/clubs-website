@@ -12,7 +12,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));  // or higher if needed
+require('dotenv').config();
+
+
 ;
 
 const membershipRequestsRoutes = require('./routes/membershipRequests');
@@ -21,6 +24,11 @@ app.use('/api/membership-requests', membershipRequestsRoutes);
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
+const emailRoutes = require('./routes/emailNotifications');
+app.use('/api/email', emailRoutes);
+
+
 
 
 

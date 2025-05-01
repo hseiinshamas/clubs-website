@@ -13,7 +13,11 @@ function ManageEventsPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/events');
+        const url = role === 'superadmin'
+  ? 'http://localhost:5000/api/events/all'
+  : `http://localhost:5000/api/events/for-club/${adminClubId}`;
+const res = await axios.get(url);
+
         const filtered = role === 'admin'
           ? res.data.filter(evt => evt.club_id === parseInt(adminClubId))
           : res.data;
