@@ -1,15 +1,15 @@
 // routes/membershipRequests.js
 const express = require('express');
 const router = express.Router();
-const db = require('../db/db'); // Adjust the path if needed
+const db = require('../db/db');
 
 // Create a new membership request
 router.post('/', (req, res) => {
-  const { first_name, last_name, major, student_id, club_id } = req.body;
+  const { first_name, last_name, major, student_id, club_id, email } = req.body;
 
   db.query(
-    'INSERT INTO membership_requests (first_name, last_name, major, student_id, club_id, status) VALUES (?, ?, ?, ?, ?, "pending")',
-    [first_name, last_name, major, student_id, club_id],
+    'INSERT INTO membership_requests (first_name, last_name, major, student_id, club_id, email, status) VALUES (?, ?, ?, ?, ?, ?, "pending")',
+    [first_name, last_name, major, student_id, club_id, email],
     (err, result) => {
       if (err) {
         console.error('Error inserting membership request:', err);
@@ -19,7 +19,6 @@ router.post('/', (req, res) => {
     }
   );
 });
-
 // Get membership requests by student id
 router.get('/student/:studentId', (req, res) => {
   const { studentId } = req.params;

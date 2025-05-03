@@ -4,7 +4,7 @@ import './HeroSection.css';
 import '../App.css';
 
 function HeroSection() {
-  const role = localStorage.getItem('role'); // check role
+  const role = localStorage.getItem('role'); // could be "admin", "superadmin", "student"
 
   return (
     <div className='hero-container'>
@@ -22,8 +22,8 @@ function HeroSection() {
           GET STARTED
         </Button>
 
-        {/* Hide login if already admin or superadmin */}
-        {role !== 'admin' && role !== 'superadmin' && (
+        {/* Only show login button if NOT logged in */}
+        {!role && (
           <Button
             className='btns'
             buttonStyle='btn--outline'

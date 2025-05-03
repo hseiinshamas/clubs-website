@@ -114,8 +114,10 @@ function MembershipRequestsPage() {
               rows={4}
             />
             <div className="modal-buttons">
-              <button className="btn-cancel" onClick={handleCancelReject}>Cancel</button>
-              <button className="btn-submit" onClick={handleRejectSubmit}>Send Rejection</button>
+            <button type="button" className="btn-cancel" onClick={handleCancelReject}>Cancel</button>
+
+              <button type="button" className="btn-submit" onClick={handleRejectSubmit}>Send Rejection</button>
+
             </div>
           </div>
         </div>
