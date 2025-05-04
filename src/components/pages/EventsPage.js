@@ -43,11 +43,15 @@ function EventsPage() {
       <div className="events-header">
         <h1>Upcoming Events</h1>
         {isAdmin && (
-          <Link to="/events/new">
-            <Button buttonStyle="btn--primary" buttonSize="btn--medium">
-              + Create Event
-            </Button>
-          </Link>
+          <Button 
+          buttonStyle="btn--primary" 
+          buttonSize="btn--medium"
+          to="/events/new"
+          as={Link} // <-- only if Button component supports this
+        >
+          + Create Event
+        </Button>
+        
         )}
       </div>
       <div className="events-grid">

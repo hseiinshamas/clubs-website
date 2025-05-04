@@ -8,6 +8,7 @@ import { Tooltip } from 'react-tooltip';
 function ClubsPage() {
   const [clubs, setClubs] = useState([]);
   const [membershipStatuses, setMembershipStatuses] = useState({});
+  const role = localStorage.getItem('role');
 
   const studentId = localStorage.getItem('studentId');
   const firstName = localStorage.getItem('firstName');
@@ -80,17 +81,20 @@ function ClubsPage() {
               <Tooltip id={`tooltip-${club.id}`} place="top" className="custom-tooltip" />
             </div>
 
-            <button
-              className="btn-primary"
-              onClick={() => handleJoinClick(club)}
-              disabled={membershipStatuses[club.id] === 'pending' || membershipStatuses[club.id] === 'joined'}
-            >
-              {membershipStatuses[club.id] === 'pending'
-                ? 'Pending Approval'
-                : membershipStatuses[club.id] === 'joined'
-                ? 'Joined'
-                : 'Join Club'}
-            </button>
+            {role !== 'admin' && role !== 'superadmin' && (
+  <button
+    className="btn-primary"
+    onClick={() => handleJoinClick(club)}
+    disabled={membershipStatuses[club.id] === 'pending' || membershipStatuses[club.id] === 'joined'}
+  >
+    {membershipStatuses[club.id] === 'pending'
+      ? 'Pending Approval'
+      : membershipStatuses[club.id] === 'joined'
+      ? 'Joined'
+      : 'Join Club'}
+  </button>
+)}
+
           </div>
         ))}
       </div>

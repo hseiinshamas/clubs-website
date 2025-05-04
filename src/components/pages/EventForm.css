@@ -47,3 +47,20 @@
 .event-form button:hover {
   background-color: #005fa3;
 }
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  float: right;
+  cursor: pointer;
+  color: #444;
+  margin-top: 10px;
+  margin-right: 10px;
+  transition: color 0.2s;
+}
+
+.close-button:hover {
+  color: #000;
+}
+

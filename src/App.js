@@ -12,6 +12,7 @@ import AdminLogin from './components/pages/AdminLogin';
 import ClubsPage from './components/pages/ClubsPage';
 import EventsPage from './components/pages/EventsPage';
 import EventForm from './components/pages/EventForm';
+
 import ManagePanel from './components/pages/ManagePanel';
 import ManageEventsPage from './components/pages/ManageEventsPage';
 import ManageAdmins from './components/pages/ManageAdmins';
@@ -45,6 +46,8 @@ function App() {
           <Route path="/user-login" element={<UserLogin />} />
           <Route path="/user-signup" element={<UserSignup />} />
           <Route path="/login-as-admin" element={<AdminLogin />} />
+          <Route path="/events/new" element={<EventForm />} />
+
 
           {/* Protected Routes */}
           <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
@@ -54,6 +57,7 @@ function App() {
           <Route path="/membership-requests" element={<ProtectedRoute><MembershipRequestsPage /></ProtectedRoute>} />
           <Route path="/manage-panel" element={<ProtectedRoute><ManagePanel /></ProtectedRoute>} />
           <Route path="/manage-events" element={<ProtectedRoute><ManageEventsPage /></ProtectedRoute>} />
+          
 
           {/* Protected Admin Routes */}
           <Route path="/manage-clubs" element={<ProtectedAdminRoute><ManageClubs /></ProtectedAdminRoute>} />

@@ -31,52 +31,58 @@ function EventForm() {
 
   const [imageBase64, setImageBase64] = useState('');
 
-const handleImageUpload = (e) => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
 
-  reader.onloadend = () => {
-    setImageBase64(reader.result); // this is the base64 string
-  };
-
-  if (file) {
-    reader.readAsDataURL(file);
-  }
-};
-
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  try {
-    const payload = {
-      ...formData,
-      image_url: imageBase64, // this is now a base64 image
+    reader.onloadend = () => {
+      setImageBase64(reader.result); // base64 image
     };
 
-    await axios.post('http://localhost:5000/api/events', payload);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
 
-    alert('Event created!');
-    navigate('/events');
-  } catch (err) {
-    console.error('Error creating event:', err);
-    alert('Failed to create event');
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
+    try {
+      const payload = {
+        ...formData,
+        image_url: imageBase64,
+      };
+
+      await axios.post('http://localhost:5000/api/events', payload);
+
+      alert('Event created!');
+      navigate('/events');
+    } catch (err) {
+      console.error('Error creating event:', err);
+      alert('Failed to create event');
+    }
+  };
 
   return (
     <div className="event-form-container">
+      <button
+        type="button"
+        className="close-button"
+        onClick={() => navigate('/events')}
+        aria-label="Close"
+      >
+        ✖
+      </button>
+
       <h1>Create New Event</h1>
       <form className="event-form" onSubmit={handleSubmit}>
         <input name="title" type="text" placeholder="Event Title" onChange={handleChange} required />
         <input name="date" type="datetime-local" onChange={handleChange} required />
         <input name="location" type="text" placeholder="Location" onChange={handleChange} required />
-        <input type="file"accept="image/*"onChange={(e) => handleImageUpload(e)}
-/>
+        <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e)} />
         <textarea name="description" placeholder="Description" onChange={handleChange} required />
 
-        {/* Club selector for superadmin only */}
+        {/* Superadmin club selector */}
         {role === 'superadmin' && (
           <select name="club_id" value={formData.club_id} onChange={handleChange} required>
             <option value="">Select Club</option>
