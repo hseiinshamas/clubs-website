@@ -14,7 +14,6 @@ function EventsPage() {
   useEffect(() => {
     const fetchEvents = async () => {
       let url = '';
-  
       if (role === 'admin') {
         const clubId = localStorage.getItem('clubId');
         url = `http://localhost:5000/api/events/for-club/${clubId}`;
@@ -23,9 +22,9 @@ function EventsPage() {
       } else if (studentId) {
         url = `http://localhost:5000/api/events/for-user/${studentId}`;
       }
-  
+
       if (!url) return;
-  
+
       try {
         const res = await fetch(url);
         const data = await res.json();
@@ -34,7 +33,7 @@ function EventsPage() {
         console.error('Failed to load events', err);
       }
     };
-  
+
     fetchEvents();
   }, [role, studentId]);
 
@@ -43,30 +42,24 @@ function EventsPage() {
       <div className="events-header">
         <h1>Upcoming Events</h1>
         {isAdmin && (
-          <Button 
-          buttonStyle="btn--primary" 
-          buttonSize="btn--medium"
-          to="/events/new"
-          as={Link} // <-- only if Button component supports this
-        >
-          + Create Event
-        </Button>
-        
+          <Button buttonStyle="btn--primary" buttonSize="btn--medium" to="/events/new" as={Link}>
+            + Create Event
+          </Button>
         )}
       </div>
       <div className="events-grid">
-      {events.map((evt) => (
-  <EventCard
-    key={evt.id}
-    id={evt.id}  // ✅ This was missing
-    title={evt.title}
-    date={evt.date}
-    location={evt.location}
-    description={evt.description}
-    image={evt.image_url}
-  />
-))}
-
+        {events.map((evt) => (
+          <EventCard
+            key={evt.id}
+            id={evt.id}
+            title={evt.title}
+            date={evt.date}
+            location={evt.location}
+            description={evt.description}
+            image={evt.image_url}
+            attendanceCount={evt.attendance_count}
+          />
+        ))}
       </div>
     </div>
   );

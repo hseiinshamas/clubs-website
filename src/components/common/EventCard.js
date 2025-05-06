@@ -1,9 +1,8 @@
-// src/components/common/EventCard.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './EventCard.css';
 import { Link } from 'react-router-dom';
 
-export default function EventCard({ id, title, date, location, image, description }) {
+export default function EventCard({ id, title, date, location, image, description, attendanceCount }) {
   const formatted = new Date(date).toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -12,7 +11,47 @@ export default function EventCard({ id, title, date, location, image, descriptio
   });
 
   const role = localStorage.getItem('role');
+  const studentId = localStorage.getItem('studentId');
   const isAdmin = role === 'admin' || role === 'superadmin';
+
+  const [joined, setJoined] = useState(false);
+
+  useEffect(() => {
+    const fetchJoinedStatus = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/events/has-joined/${id}/${studentId}`);
+        const data = await res.json();
+        setJoined(data.joined);
+      } catch (err) {
+        console.error('Error checking join status:', err);
+      }
+    };
+
+    if (!isAdmin && studentId) {
+      fetchJoinedStatus();
+    }
+  }, [id, studentId, isAdmin]);
+
+  const handleJoin = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/events/join/${id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ studentId }),
+      });
+
+      if (res.ok) {
+        setJoined(true);
+      } else {
+        const error = await res.json();
+        alert(error.message);
+      }
+    } catch (err) {
+      console.error('Error joining event:', err);
+    }
+  };
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this event?')) {
@@ -21,7 +60,7 @@ export default function EventCard({ id, title, date, location, image, descriptio
           method: 'DELETE',
         });
         if (response.ok) {
-          window.location.reload(); // Refresh the page to reflect deletion
+          window.location.reload();
         } else {
           console.error('Failed to delete event');
         }
@@ -38,21 +77,31 @@ export default function EventCard({ id, title, date, location, image, descriptio
       </div>
       <div className="event-info">
         <h2>{title}</h2>
-        <span className="event-meta">
-          {formatted} • {location}
-        </span>
+        <span className="event-meta">{formatted} • {location}</span>
         <p>{description}</p>
+
+        {!isAdmin && !joined && (
+          <button className="btn-join" onClick={handleJoin}>Join</button>
+        )}
+
+        {!isAdmin && joined && (
+          <p style={{ color: 'green', fontWeight: 'bold' }}>You're going!</p>
+        )}
+
         {isAdmin && (
           <div className="event-actions">
-            <Link to={`/events/edit/${id}`} className="btn btn-edit">
-              Edit
-            </Link>
-            <button onClick={handleDelete} className="btn btn-delete">
-              Delete
-            </button>
+            <Link to={`/events/edit/${id}`} className="btn btn-edit">Edit</Link>
+            <button onClick={handleDelete} className="btn btn-delete">Delete</button>
           </div>
         )}
       </div>
+
+      {isAdmin && (
+        <div className="attendance-badge">
+          {attendanceCount || 0} going
+        </div>
+      )}
     </div>
   );
 }
+  

@@ -2,12 +2,18 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db/db');
 
-
-// Get events for a specific club (admin)
+// Get events for a specific club (admin) with attendance counts
 router.get('/for-club/:clubId', (req, res) => {
   const { clubId } = req.params;
 
-  db.query('SELECT * FROM events WHERE club_id = ?', [clubId], (err, results) => {
+  const query = `
+    SELECT e.*, 
+           COALESCE((SELECT COUNT(*) FROM event_attendance ea WHERE ea.event_id = e.id), 0) AS attendance_count
+    FROM events e
+    WHERE e.club_id = ?
+  `;
+
+  db.query(query, [clubId], (err, results) => {
     if (err) {
       console.error('Error fetching events for club:', err);
       return res.status(500).json({ error: 'Database error' });
@@ -16,20 +22,69 @@ router.get('/for-club/:clubId', (req, res) => {
   });
 });
 
-// Get all events (for superadmin)
+// Get all events (for superadmin) with attendance counts
 router.get('/all', (req, res) => {
-  db.query('SELECT * FROM events', (err, results) => {
+  const query = `
+    SELECT e.*, 
+           COALESCE((SELECT COUNT(*) FROM event_attendance ea WHERE ea.event_id = e.id), 0) AS attendance_count
+    FROM events e
+    ORDER BY e.date ASC
+  `;
+
+  db.query(query, (err, results) => {
     if (err) {
       console.error('Error fetching all events:', err);
       return res.status(500).json({ error: 'Database error' });
     }
-    res.json(results); // ✅ results should contain `id`
+    res.json(results);
   });
 });
 
-// DELETE /api/events/:id - Delete an event
+// GET events for clubs a user is joined in (student)
+router.get('/for-user/:studentId', (req, res) => {
+  const { studentId } = req.params;
+
+  const query = `
+    SELECT e.*,
+           COALESCE((SELECT COUNT(*) FROM event_attendance ea WHERE ea.event_id = e.id), 0) AS attendance_count
+    FROM events e
+    JOIN membership_requests m ON e.club_id = m.club_id
+    WHERE m.student_id = ? AND m.status = 'joined'
+  `;
+
+  db.query(query, [studentId], (err, results) => {
+    if (err) {
+      console.error('Error fetching events for user:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+    res.json(results);
+  });
+});
+
+// POST a new event (for admin or superadmin)
+router.post('/', (req, res) => {
+  const { title, date, location, description, image_url, club_id } = req.body;
+
+  if (!title || !date || !location || !description || !club_id) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+
+  db.query(
+    'INSERT INTO events (title, date, location, description, image_url, club_id) VALUES (?, ?, ?, ?, ?, ?)',
+    [title, date, location, description, image_url, club_id],
+    (err) => {
+      if (err) {
+        console.error('Error inserting event:', err);
+        return res.status(500).json({ error: 'Failed to create event' });
+      }
+      res.status(201).json({ message: 'Event created successfully' });
+    }
+  );
+});
+
+// DELETE an event by ID
 router.delete('/:id', (req, res) => {
-  const eventId = parseInt(req.params.id); // 🔥 Parse to ensure it's a number
+  const eventId = parseInt(req.params.id);
 
   if (isNaN(eventId)) {
     return res.status(400).json({ error: 'Invalid event ID' });
@@ -49,44 +104,20 @@ router.delete('/:id', (req, res) => {
   });
 });
 
-
-// ✅ GET events for clubs a user is joined in
-router.get('/for-user/:studentId', (req, res) => {
-  const { studentId } = req.params;
-
-  const query = `
-    SELECT e.*
-    FROM events e
-    JOIN membership_requests m ON e.club_id = m.club_id
-    WHERE m.student_id = ? AND m.status = 'joined'
-  `;
-
-  db.query(query, [studentId], (err, results) => {
-    if (err) {
-      console.error('Error fetching events for user:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    res.json(results);
-  });
-});
-
-// ✅ POST a new event (for admin or superadmin)
-router.post('/', (req, res) => {
-  const { title, date, location, description, image_url, club_id } = req.body;
-
-  if (!title || !date || !location || !description || !club_id) {
-    return res.status(400).json({ error: 'Missing fields' });
-  }
+// ✅ Check if a student already joined a specific event
+router.get('/has-joined/:eventId/:studentId', (req, res) => {
+  const { eventId, studentId } = req.params;
 
   db.query(
-    'INSERT INTO events (title, date, location, description, image_url, club_id) VALUES (?, ?, ?, ?, ?, ?)',
-    [title, date, location, description, image_url, club_id],
-    (err) => {
+    'SELECT 1 FROM event_attendance WHERE event_id = ? AND student_id = ?',
+    [eventId, studentId],
+    (err, results) => {
       if (err) {
-        console.error('Error inserting event:', err);
-        return res.status(500).json({ error: 'Failed to create event' });
+        console.error('Error checking joined status:', err);
+        return res.status(500).json({ error: 'Database error' });
       }
-      res.status(201).json({ message: 'Event created successfully' });
+
+      res.json({ joined: results.length > 0 });
     }
   );
 });

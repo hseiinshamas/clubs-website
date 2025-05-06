@@ -28,6 +28,13 @@ const jwt = require('jsonwebtoken');
 const emailRoutes = require('./routes/emailNotifications');
 app.use('/api/email', emailRoutes);
 
+const userEventsRoutes = require('./routes/userEvents');
+app.use('/api/events', userEventsRoutes);
+
+const attendanceRoutes = require('./routes/eventAttendance');
+app.use('/api/events', attendanceRoutes);
+
+
 
 
 
@@ -122,8 +129,7 @@ app.use(cors());
 app.use(express.json());
 
 
-const userEventsRoutes = require('./routes/userEvents');
-app.use('/api/events', userEventsRoutes);
+
 
 
 

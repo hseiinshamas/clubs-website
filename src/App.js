@@ -35,6 +35,16 @@ if (expiration && new Date().getTime() > parseInt(expiration)) {
   window.location.href = '/user-login';
 }
 
+// ✅ Only allow students or admins (with redirectBack)
+const RequireUserOrAdmin = ({ children }) => {
+  const studentId = localStorage.getItem('studentId');
+  const role = localStorage.getItem('role');
+  const isAllowed = studentId || role === 'admin' || role === 'superadmin';
+
+  const currentPath = window.location.pathname;
+  return isAllowed ? children : <Navigate to={`/user-login?redirectTo=${currentPath}`} />;
+};
+
 function App() {
   return (
     <GoogleOAuthProvider clientId="1095530784674-co9op5tm4eknjqqri9v8p0d0cbgi04jr.apps.googleusercontent.com">
@@ -43,28 +53,16 @@ function App() {
         <Routes>
 
           {/* Public Routes */}
+          <Route path="/" element={<Home />} />
           <Route path="/user-login" element={<UserLogin />} />
           <Route path="/user-signup" element={<UserSignup />} />
           <Route path="/login-as-admin" element={<AdminLogin />} />
-          <Route path="/events/new" element={<EventForm />} />
+          <Route path="/events" element={<EventsPage />} />
 
+          {/* Clubs page: requires student or admin */}
+          <Route path="/clubs" element={<RequireUserOrAdmin><ClubsPage /></RequireUserOrAdmin>} />
 
-          {/* Protected Routes */}
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/clubs" element={<ProtectedRoute><ClubsPage /></ProtectedRoute>} />
-          <Route path="/events" element={<ProtectedRoute><EventsPage /></ProtectedRoute>} />
-          <Route path="/accepted-members" element={<ProtectedRoute><AcceptedMembersPage /></ProtectedRoute>} />
-          <Route path="/membership-requests" element={<ProtectedRoute><MembershipRequestsPage /></ProtectedRoute>} />
-          <Route path="/manage-panel" element={<ProtectedRoute><ManagePanel /></ProtectedRoute>} />
-          <Route path="/manage-events" element={<ProtectedRoute><ManageEventsPage /></ProtectedRoute>} />
-          
-
-          {/* Protected Admin Routes */}
-          <Route path="/manage-clubs" element={<ProtectedAdminRoute><ManageClubs /></ProtectedAdminRoute>} />
-          <Route path="/manage-admins" element={<ProtectedAdminRoute><ManageAdmins /></ProtectedAdminRoute>} />
-          <Route path="/admin/manage-club/:id" element={<ProtectedAdminRoute><EditClubDetails /></ProtectedAdminRoute>} />
-
-          {/* ✅ Event Creation Route (only for admin & superadmin) */}
+          {/* Event creation: only admin/superadmin */}
           <Route 
             path="/events/new" 
             element={
@@ -73,9 +71,21 @@ function App() {
               : <Navigate to="/user-login" />
             } 
           />
-          
-          <Route path="/events" element={<EventsPage />} />
-        <Route path="/events/edit/:id" element={<EditEventPage />} />
+
+          {/* Logged-in user routes */}
+          <Route path="/accepted-members" element={<ProtectedRoute><AcceptedMembersPage /></ProtectedRoute>} />
+          <Route path="/membership-requests" element={<ProtectedRoute><MembershipRequestsPage /></ProtectedRoute>} />
+          <Route path="/manage-panel" element={<ProtectedRoute><ManagePanel /></ProtectedRoute>} />
+          <Route path="/manage-events" element={<ProtectedRoute><ManageEventsPage /></ProtectedRoute>} />
+
+          {/* Admin-only routes */}
+          <Route path="/manage-clubs" element={<ProtectedAdminRoute><ManageClubs /></ProtectedAdminRoute>} />
+          <Route path="/manage-admins" element={<ProtectedAdminRoute><ManageAdmins /></ProtectedAdminRoute>} />
+          <Route path="/admin/manage-club/:id" element={<ProtectedAdminRoute><EditClubDetails /></ProtectedAdminRoute>} />
+
+          {/* Event editing */}
+          <Route path="/events/edit/:id" element={<EditEventPage />} />
+
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />
 

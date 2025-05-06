@@ -1,3 +1,9 @@
+const express = require('express');
+const router = express.Router();
+const db = require('../db/db');
+
+
+
 // Join event
 router.post('/join/:eventId', (req, res) => {
     const { studentId } = req.body;
@@ -40,4 +46,7 @@ router.post('/join/:eventId', (req, res) => {
       }
     );
   });
+
+  module.exports = router;
+
   
