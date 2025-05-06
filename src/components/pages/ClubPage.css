@@ -405,3 +405,32 @@
   z-index: 9999;
   font-weight: bold;
 }
+
+.joined-leave-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.joined-label {
+  margin-right: 40px;
+  padding: 6px 12px;
+  background-color: #2ecc71;
+  color: white;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.leave-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.leave-btn:hover {
+  background-color: #c0392b;
+}

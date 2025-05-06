@@ -65,6 +65,31 @@ router.put('/:id/approve', (req, res) => {
   );
 });
 
+// Leave club (student removes their membership)
+router.delete('/leave/:studentId/:clubId', (req, res) => {
+  const { studentId, clubId } = req.params;
+
+  db.query(
+    'DELETE FROM membership_requests WHERE student_id = ? AND club_id = ? AND status = "joined"',
+    [studentId, clubId],
+    (err, result) => {
+      if (err) {
+        console.error('Error leaving club:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Membership not found or not accepted yet' });
+      }
+
+      res.status(200).json({ message: 'Left the club successfully' });
+    }
+  );
+});
+
+
+
+
 // Reject Membership
 // DELETE membership request by id
 router.delete('/:id', (req, res) => {
@@ -119,6 +144,29 @@ router.get('/accepted', (req, res) => {
     }
   );
 });
+
+// Leave club route
+router.delete('/leave/:studentId/:clubId', (req, res) => {
+  const studentId = req.params.studentId;
+  const clubId = parseInt(req.params.clubId); // keep this number, it's fine
+
+  const query = 'DELETE FROM membership_requests WHERE student_id = ? AND club_id = ? AND status = "joined"';
+
+  db.query(query, [studentId.toString(), clubId], (err, result) => {
+    if (err) {
+      console.error('❌ Error removing membership:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (result.affectedRows === 0) {
+      console.warn('⚠️ No joined membership found to delete');
+      return res.status(404).json({ error: 'No matching record' });
+    }
+
+    res.json({ message: 'Successfully left the club' });
+  });
+});
+
 
 
 module.exports = router;

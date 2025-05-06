@@ -9,21 +9,19 @@ function ClubsPage() {
   const [clubs, setClubs] = useState([]);
   const [membershipStatuses, setMembershipStatuses] = useState({});
   const role = localStorage.getItem('role');
-
+  
   const studentId = localStorage.getItem('studentId');
   const firstName = localStorage.getItem('firstName');
   const lastName = localStorage.getItem('lastName');
   const major = localStorage.getItem('major');
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/api/clubs')
+    axios.get('http://localhost:5000/api/clubs')
       .then((res) => setClubs(res.data))
       .catch((err) => console.error('Error fetching clubs:', err));
 
     if (studentId) {
-      axios
-        .get(`http://localhost:5000/api/membership-requests/student/${studentId}`)
+      axios.get(`http://localhost:5000/api/membership-requests/student/${studentId}`)
         .then((res) => {
           const statuses = {};
           res.data.forEach((request) => {
@@ -34,6 +32,21 @@ function ClubsPage() {
         .catch((err) => console.error('Error fetching membership statuses:', err));
     }
   }, [studentId]);
+
+  const handleLeaveClub = async (clubId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/membership-requests/leave/${studentId}/${clubId}`);
+      setMembershipStatuses(prev => {
+        const updated = { ...prev };
+        delete updated[clubId];
+        return updated;
+      });
+      alert('You left the club.');
+    } catch (error) {
+      console.error('Error leaving club:', error);
+      alert('Failed to leave the club.');
+    }
+  };
 
   const handleJoinClick = async (club) => {
     if (!firstName || !lastName || !major || !studentId) {
@@ -50,7 +63,6 @@ function ClubsPage() {
         student_id: studentId,
       });
 
-      // Instantly show Pending Approval
       setMembershipStatuses((prev) => ({
         ...prev,
         [club.id]: 'pending',
@@ -70,7 +82,6 @@ function ClubsPage() {
         {clubs.map((club) => (
           <div className="club-card" key={club.id}>
             <img src={club.image_url} alt={club.name} />
-
             <div className="club-title">
               <h2>{club.name}</h2>
               <FaInfoCircle
@@ -82,19 +93,26 @@ function ClubsPage() {
             </div>
 
             {role !== 'admin' && role !== 'superadmin' && (
+              <>
+                {membershipStatuses[club.id] === 'joined' ? (
+  <div className="joined-leave-wrap">
+    <span className="joined-label">Joined</span>
+    <button className="btn-danger leave-btn" onClick={() => handleLeaveClub(club.id)}>
+      Leave
+    </button>
+  </div>
+) : (
   <button
     className="btn-primary"
     onClick={() => handleJoinClick(club)}
-    disabled={membershipStatuses[club.id] === 'pending' || membershipStatuses[club.id] === 'joined'}
+    disabled={membershipStatuses[club.id] === 'pending'}
   >
-    {membershipStatuses[club.id] === 'pending'
-      ? 'Pending Approval'
-      : membershipStatuses[club.id] === 'joined'
-      ? 'Joined'
-      : 'Join Club'}
+    {membershipStatuses[club.id] === 'pending' ? 'Pending Approval' : 'Join Club'}
   </button>
 )}
 
+              </>
+            )}
           </div>
         ))}
       </div>

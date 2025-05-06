@@ -4,35 +4,38 @@ import './HeroSection.css';
 import '../App.css';
 
 function HeroSection() {
-  const role = localStorage.getItem('role'); // could be "admin", "superadmin", "student"
+  const role = localStorage.getItem('role');
 
   return (
-    <div className='hero-container'>
-      <img src='/images/background.png' alt='Background' className='hero-image' />
-      <h1>LIU CLUBS WEBSITE</h1>
-      <p>Join Your Favorite Club Now!</p>
+    <div className='hero-wrapper'>
+      <img src='/images/homepagebackground.png' alt='Background' className='hero-image' />
+      <div className='hero-overlay' />
 
-      <div className='hero-btns'>
-        <Button
-          className='btns'
-          buttonStyle='btn--outline'
-          buttonSize='btn--large'
-          to='/clubs'
-        >
-          GET STARTED
-        </Button>
+      <div className='hero-container'>
+        <h1>LIU CLUBS WEBSITE</h1>
+        <p>Find Your People. Build Your Path</p>
 
-        {/* Only show login button if NOT logged in */}
-        {!role && (
+        <div className='hero-btns'>
           <Button
             className='btns'
             buttonStyle='btn--outline'
             buttonSize='btn--large'
-            to='/login-as-admin'
+            to='/clubs'
           >
-            LOGIN AS ADMIN
+            GET STARTED
           </Button>
-        )}
+
+          {!role && (
+            <Button
+              className='btns'
+              buttonStyle='btn--outline'
+              buttonSize='btn--large'
+              to='/login-as-admin'
+            >
+              LOGIN AS ADMIN
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );
