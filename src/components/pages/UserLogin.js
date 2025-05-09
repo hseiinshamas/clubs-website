@@ -11,7 +11,6 @@ function UserLogin() {
 
   const [redirectTo, setRedirectTo] = useState('/');
 
-  // ✅ Parse query param AFTER initial render
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const redirect = params.get('redirectTo');
@@ -43,7 +42,6 @@ function UserLogin() {
         const expirationTime = new Date().getTime() + 60 * 60 * 1000;
         localStorage.setItem('expiration', expirationTime);
 
-        // ✅ Go to where user wanted to go originally
         navigate(redirectTo);
       } else {
         alert(data.error || 'Login failed');
@@ -77,6 +75,12 @@ function UserLogin() {
           />
           <button type="submit">Login</button>
         </form>
+
+        <div style={{ marginTop: '10px' }}>
+          <Link to="/forgot-password" style={{ color: '#00f', textDecoration: 'underline' }}>
+            Forgot your password?
+          </Link>
+        </div>
 
         <div style={{ marginTop: '15px' }}>
           <p>Don't have an account?

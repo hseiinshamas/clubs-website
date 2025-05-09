@@ -1,7 +1,6 @@
-
 import './Cards.css';
 import CardItem from './CardItem';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'; // Import icons
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
 
@@ -10,10 +9,9 @@ function Cards() {
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    // Fetch the club data from the backend
     axios.get('http://localhost:5000/api/clubs')
       .then(res => {
-        setClubs(res.data); // Store clubs in state
+        setClubs(res.data);
       })
       .catch(err => {
         console.error('Error fetching clubs:', err);
@@ -37,14 +35,13 @@ function Cards() {
         </button>
         <div className='cards__items-wrapper' ref={scrollRef}>
           <ul className="cards__items">
-            {/* Dynamically render CardItem components */}
             {clubs.map(club => (
               <CardItem
-                key={club.id} // Unique key for each CardItem
-                src={club.image_url || '/images/default-club.jpg'} // Default image if no image_path
+                key={club.id}
+                src={club.image_url || '/images/default-club.jpg'}
                 text={club.name}
                 label={club.label}
-                path="/clubs" // Dynamic path for each club, latr you can change it to club.id or any other identifier and create a clubdetailspage
+                path="/clubs"
               />
             ))}
           </ul>
@@ -53,6 +50,15 @@ function Cards() {
           <FaChevronRight />
         </button>
       </div>
+
+      {/* 🟢 Smooth section transition divider */}
+      <div className="wave-divider">
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+          <path d="M0,0 C480,100 960,0 1440,100 L1440,0 L0,0 Z" fill="#f9f9f9"></path>
+        </svg>
+      </div>
+
+      
     </div>
   );
 }

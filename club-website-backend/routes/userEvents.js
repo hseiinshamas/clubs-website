@@ -22,7 +22,7 @@ router.get('/for-club/:clubId', (req, res) => {
   });
 });
 
-// Get all events (for superadmin) with attendance counts
+// Get all events (for all users) with attendance counts
 router.get('/all', (req, res) => {
   const query = `
     SELECT e.*, 
@@ -34,27 +34,6 @@ router.get('/all', (req, res) => {
   db.query(query, (err, results) => {
     if (err) {
       console.error('Error fetching all events:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
-    res.json(results);
-  });
-});
-
-// GET events for clubs a user is joined in (student)
-router.get('/for-user/:studentId', (req, res) => {
-  const { studentId } = req.params;
-
-  const query = `
-    SELECT e.*,
-           COALESCE((SELECT COUNT(*) FROM event_attendance ea WHERE ea.event_id = e.id), 0) AS attendance_count
-    FROM events e
-    JOIN membership_requests m ON e.club_id = m.club_id
-    WHERE m.student_id = ? AND m.status = 'joined'
-  `;
-
-  db.query(query, [studentId], (err, results) => {
-    if (err) {
-      console.error('Error fetching events for user:', err);
       return res.status(500).json({ error: 'Database error' });
     }
     res.json(results);

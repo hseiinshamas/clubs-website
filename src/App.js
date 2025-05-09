@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 
 import './App.css';
+import ResetPassword from './components/pages/ResetPassword';
 
 import Home from './components/pages/Home';
 import AdminLogin from './components/pages/AdminLogin';
@@ -25,6 +26,8 @@ import MembershipRequestsPage from './components/pages/MembershipRequestsPage';
 import UserLogin from './components/pages/UserLogin';
 import UserSignup from './components/pages/UserSignup';
 import EditEventPage from './components/pages/EditEventPage';
+import PasswordForget from './components/pages/passwordForget';
+
 
 const token = localStorage.getItem('token');
 const expiration = localStorage.getItem('expiration');
@@ -58,20 +61,17 @@ function App() {
           <Route path="/user-signup" element={<UserSignup />} />
           <Route path="/login-as-admin" element={<AdminLogin />} />
           <Route path="/events" element={<EventsPage />} />
+          <Route path="/forgot-password" element={<PasswordForget />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
+          
+
+
+
 
           {/* Clubs page: requires student or admin */}
           <Route path="/clubs" element={<RequireUserOrAdmin><ClubsPage /></RequireUserOrAdmin>} />
 
-          {/* Event creation: only admin/superadmin */}
-          <Route 
-            path="/events/new" 
-            element={
-              token && (role === 'admin' || role === 'superadmin') 
-              ? <EventForm /> 
-              : <Navigate to="/user-login" />
-            } 
-          />
-
+        
           {/* Logged-in user routes */}
           <Route path="/accepted-members" element={<ProtectedRoute><AcceptedMembersPage /></ProtectedRoute>} />
           <Route path="/membership-requests" element={<ProtectedRoute><MembershipRequestsPage /></ProtectedRoute>} />
@@ -82,6 +82,8 @@ function App() {
           <Route path="/manage-clubs" element={<ProtectedAdminRoute><ManageClubs /></ProtectedAdminRoute>} />
           <Route path="/manage-admins" element={<ProtectedAdminRoute><ManageAdmins /></ProtectedAdminRoute>} />
           <Route path="/admin/manage-club/:id" element={<ProtectedAdminRoute><EditClubDetails /></ProtectedAdminRoute>} />
+          <Route path="/events/new" element={<ProtectedAdminRoute><EventForm /></ProtectedAdminRoute>} />
+
 
           {/* Event editing */}
           <Route path="/events/edit/:id" element={<EditEventPage />} />

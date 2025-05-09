@@ -1,0 +1,52 @@
+.about-preview {
+    background-color: #f9f9f9;
+    padding: 80px 20px;
+  }
+  
+  .about-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    flex-wrap: wrap;
+  }
+  
+  .about-text {
+    flex: 1 1 500px;
+  }
+  
+  .about-text h2 {
+    font-size: 36px;
+    color: #222;
+    font-family: 'Georgia', serif;
+    margin-bottom: 20px;
+  }
+  
+  .about-text p {
+    font-size: 18px;
+    color: #444;
+    line-height: 1.6;
+  }
+  
+  .about-image {
+    flex: 1 1 400px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .about-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  .footer-divider {
+    display: none;
+  }
+  
+  
+  
+  

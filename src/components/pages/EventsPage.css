@@ -1,28 +1,41 @@
-/* EventsPage.css */
 .events-page {
-  padding: 4rem 2rem;
-  /* Dark gradient like your Clubs page */
-  background: linear-gradient(135deg, #141e30, #243b55);
+  background-color: #f8f9fa;
   min-height: 100vh;
+  padding: 5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.events-header {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 
-  .events-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 100px auto 2rem; /* added top margin here */
-  }
-  .events-header h1 {
-    font-size: 48px;
-    color: #e2d9d9;
-  }
-  .events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
+.section-title {
+  margin-top: 20px;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #212529;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.no-events-fallback {
+  color: #6c757d;
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-top: 4rem;
+  text-align: center;
+}

@@ -33,6 +33,12 @@ export default function EventCard({ id, title, date, location, image, descriptio
   }, [id, studentId, isAdmin]);
 
   const handleJoin = async () => {
+    if (!studentId) {
+      const redirectUrl = encodeURIComponent(window.location.pathname);
+      window.location.href = `/user-login?redirectTo=${redirectUrl}`;
+      return;
+    }
+  
     try {
       const res = await fetch(`http://localhost:5000/api/events/join/${id}`, {
         method: 'POST',
@@ -41,7 +47,7 @@ export default function EventCard({ id, title, date, location, image, descriptio
         },
         body: JSON.stringify({ studentId }),
       });
-
+  
       if (res.ok) {
         setJoined(true);
       } else {
@@ -52,7 +58,7 @@ export default function EventCard({ id, title, date, location, image, descriptio
       console.error('Error joining event:', err);
     }
   };
-
+  
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       try {
