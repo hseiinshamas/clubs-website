@@ -1,7 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import './ClubPage.css';
 import axios from 'axios';
-import { FaInfoCircle } from 'react-icons/fa';
+import { FaInfoCircle, FaAngleDoubleDown } from 'react-icons/fa';
 import { Tooltip } from 'react-tooltip';
 import { useNavigate } from 'react-router-dom';
 
@@ -93,22 +94,73 @@ function ClubsPage() {
     navigate('/user-login?redirectTo=/clubs');
   };
 
+  const scrollToClubs = () => {
+    const target = document.getElementById('clubs-section');
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="clubs-container">
-      <h1>Our Clubs</h1>
+      <section className="clubs-hero-wrapper">
+        <div className="clubs-hero-content">
+          <h2>Join the Club, Shape Your Experience</h2>
+          <p>
+            At LIU, clubs are more than just activities — they’re where you grow, lead, and belong.<br />
+            Click <strong>"Join Club"</strong>, and your request will be reviewed by the club admin for approval.
+          </p>
+          <button className="explore-button" onClick={scrollToClubs}>
+            <FaAngleDoubleDown style={{ marginRight: '8px', animation: 'bounce 1.5s infinite' }} />
+            Explore Clubs
+          </button>
+        </div>
+        <div className="hero-curve">
+          <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+            <path d="M0,0 C480,100 960,0 1440,100 L1440,0 L0,0 Z" fill="#f8fafc" />
+          </svg>
+        </div>
+      </section>
+
+
+      <div className="club-video-wrapper">
+  <video
+    src="/videos/clubs-promo.mp4"
+    autoPlay
+    muted
+    loop
+    playsInline
+    className="club-hero-video"
+  ></video>
+
+  <div className="video-overlay-text">
+    <h2>Life at LIU in Motion</h2>
+    <p>Discover vibrant events and student experiences waiting for you.</p>
+  </div>
+</div>
+
+
+
+
+
+
+      <div id="clubs-section" className="clubs-header">
+        <h2>Our Clubs</h2>
+        <p>Discover your passion, connect with like-minded students, and make the most of your university life.</p>
+      </div>
+
       <div className="clubs-grid">
         {clubs.map((club) => (
           <div className="club-card" key={club.id}>
             <img src={club.image_url} alt={club.name} />
             <div className="club-title">
-              <h2>{club.name}</h2>
-              <FaInfoCircle
-                data-tooltip-id={`tooltip-${club.id}`}
-                data-tooltip-content={club.description}
-                className="info-icon"
-              />
-              <Tooltip id={`tooltip-${club.id}`} place="top" className="custom-tooltip" />
-            </div>
+  <span className="club-name">{club.name}</span>
+  <FaInfoCircle
+    data-tooltip-id={`tooltip-${club.id}`}
+    data-tooltip-content={club.description}
+    className="info-icon"
+  />
+  <Tooltip id={`tooltip-${club.id}`} place="top" className="custom-tooltip" />
+</div>
+
 
             {role !== 'admin' && role !== 'superadmin' && (
               <>
@@ -134,7 +186,6 @@ function ClubsPage() {
         ))}
       </div>
 
-      {/* ✅ Login Modal */}
       {showLoginModal && (
         <div className="modal-overlay">
           <div className="modal">

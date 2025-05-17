@@ -91,3 +91,31 @@
   font-size: 14px;
   color: #888;
 }
+
+.admin-footer-link {
+  color: #ccc;
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+
+.admin-footer-link:hover {
+  color: #fff;
+}
+
+.show-more-btn {
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'Georgia', serif;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.show-more-btn:hover {
+  background-color: #e03e3e;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+

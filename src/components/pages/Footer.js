@@ -1,4 +1,6 @@
 import './Footer.css';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const eventData = [
   { title: 'Graduation Ceremony', src: '/images/event1.JPG' },
@@ -14,17 +16,26 @@ const eventData = [
 ];
 
 function Footer() {
+  const [showAll, setShowAll] = useState(false);
+
+  const visibleEvents = showAll ? eventData : eventData.slice(0, 3);
+
   return (
     <>
       <footer className="footer">
         <h2 className="footer-title">Past Events Highlights</h2>
         <div className="gallery-container">
-          {eventData.map((event, index) => (
+          {visibleEvents.map((event, index) => (
             <div className="gallery-card" key={index}>
               <img src={event.src} alt={event.title} className="gallery-image" />
               <div className="gallery-caption">{event.title}</div>
             </div>
           ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '30px' }}>
+          <button className="show-more-btn" onClick={() => setShowAll(!showAll)}>
+            {showAll ? 'Show Less' : 'Show More'}
+          </button>
         </div>
       </footer>
 
@@ -40,6 +51,9 @@ function Footer() {
 
         <div className="footer-bottom-note">
           &copy; {new Date().getFullYear()} LIU Clubs – All rights reserved.
+          <span style={{ marginLeft: '10px' }}>
+            <Link to="/login-as-admin" className="admin-footer-link">Admin Access</Link>
+          </span>
         </div>
       </div>
     </>
