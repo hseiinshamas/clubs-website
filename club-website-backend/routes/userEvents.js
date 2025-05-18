@@ -101,4 +101,48 @@ router.get('/has-joined/:eventId/:studentId', (req, res) => {
   );
 });
 
+
+
+
+// Get a single event by ID
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM events WHERE id = ?', [id], (err, results) => {
+    if (err) return res.status(500).json({ error: 'DB error' });
+    if (results.length === 0) return res.status(404).json({ error: 'Not found' });
+    res.json(results[0]);
+  });
+});
+
+
+// Update an event by ID
+router.put('/:id', (req, res) => {
+  const eventId = parseInt(req.params.id);
+  const { title, date, location, description, image_url } = req.body;
+
+  if (!title || !date || !location || !description) {
+    return res.status(400).json({ error: 'Missing fields' });
+  }
+
+  const query = `
+    UPDATE events
+    SET title = ?, date = ?, location = ?, description = ?, image_url = ?
+    WHERE id = ?
+  `;
+
+  db.query(query, [title, date, location, description, image_url, eventId], (err, result) => {
+    if (err) {
+      console.error('Error updating event:', err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    res.status(200).json({ message: 'Event updated successfully' });
+  });
+});
+
+
 module.exports = router;

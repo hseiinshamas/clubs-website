@@ -1,18 +1,43 @@
 .event-card {
-    background: #fff; border-radius: 12px; overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: transform .3s;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 
-  }
-  .event-card:hover { transform: translateY(-5px); }
-  .event-thumb img { width:100%; height:200px; object-fit:cover; }
-  .event-info { padding:1rem; }
-  .event-info h2 { margin:0 0 .5rem; font-size:1.5rem; margin-top: 10px;}
-  .event-meta { font-size:.9rem; color:#777; }
-  .event-info p { margin-top:.5rem; color:#555; }
-  
+.event-card:hover {
+  transform: translateY(-5px);
+}
 
-  /* Add below existing styles */
+.event-thumb img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+
+.event-info {
+  padding: 1rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.event-info h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+
+.event-meta {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.event-info p {
+  margin-top: 0.5rem;
+  color: #555;
+}
 
 .btn-join {
   display: inline-block;
@@ -30,23 +55,23 @@
 .btn-join:hover {
   background-color: #1a2a3c;
 }
-.attendance-badge {
-  position: absolute;
-  bottom: 12px;
-  right: 12px;
-  background-color: #243b55;
-  color: white;
-  padding: 6px 12px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
 
 .event-actions {
-  margin-top: 1.5rem;
   display: flex;
-  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.attendance-left {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #243b55;
+}
+
+.admin-buttons {
+  display: flex;
+  gap: 10px;
 }
 
 .btn-admin {
@@ -62,7 +87,7 @@
   text-align: center;
 }
 
-/* EDIT BUTTON: subtle professional blue */
+/* EDIT BUTTON */
 .btn-admin.edit {
   background-color: #f0f4ff;
   color: #0046d4;
@@ -74,7 +99,7 @@
   color: #0033aa;
 }
 
-/* DELETE BUTTON: modern danger red */
+/* DELETE BUTTON */
 .btn-admin.delete {
   background-color: #ffeaea;
   color: #c0392b;

@@ -85,29 +85,28 @@ export default function EventCard({ id, title, date, location, image, descriptio
         <h2>{title}</h2>
         <span className="event-meta">{formatted} • {location}</span>
         <p>{description}</p>
-
+  
         {!isAdmin && !joined && (
           <button className="btn-join" onClick={handleJoin}>Join</button>
         )}
-
+  
         {!isAdmin && joined && (
           <p style={{ color: 'green', fontWeight: 'bold' }}>You're going!</p>
         )}
-
+  
         {isAdmin && (
           <div className="event-actions">
-            <Link to={`/events/edit/${id}`} className="btn btn-edit">Edit</Link>
-            <button onClick={handleDelete} className="btn btn-delete">Delete</button>
+            <div className="attendance-left">
+              {attendanceCount || 0} going
+            </div>
+            <div className="admin-buttons">
+              <Link to={`/events/edit/${id}`} className="btn btn-edit">Edit</Link>
+              <button onClick={handleDelete} className="btn btn-delete">Delete</button>
+            </div>
           </div>
         )}
       </div>
-
-      {isAdmin && (
-        <div className="attendance-badge">
-          {attendanceCount || 0} going
-        </div>
-      )}
     </div>
   );
-}
   
+}

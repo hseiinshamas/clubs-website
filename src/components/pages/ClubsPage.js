@@ -158,7 +158,13 @@ function ClubsPage() {
     data-tooltip-content={club.description}
     className="info-icon"
   />
-  <Tooltip id={`tooltip-${club.id}`} place="top" className="custom-tooltip" />
+  <Tooltip 
+  id={`tooltip-${club.id}`} 
+  place="top" 
+  className="custom-tooltip"
+  style={{ zIndex: 9999 }}
+/>
+
 </div>
 
 
