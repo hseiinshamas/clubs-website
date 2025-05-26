@@ -32,7 +32,8 @@ router.put('/:id', (req, res) => {
   const { name, description, image } = req.body; // Added 'image' field here too
 
   db.query(
-    'UPDATE clubs SET name = ?, description = ?, image = ? WHERE id = ?',
+    'UPDATE clubs SET name = ?, description = ?, image_url = ? WHERE id = ?',
+
     [name, description, image, id],
     (err, result) => {
       if (err) return res.status(500).json({ error: 'Failed to update club' });

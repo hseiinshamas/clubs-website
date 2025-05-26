@@ -40,7 +40,7 @@ router.get('/all', (req, res) => {
   });
 });
 
-// POST a new event (for admin or superadmin)
+// Create new event
 router.post('/', (req, res) => {
   const { title, date, location, description, image_url, club_id } = req.body;
 
@@ -61,7 +61,7 @@ router.post('/', (req, res) => {
   );
 });
 
-// DELETE an event by ID
+// Delete event by ID
 router.delete('/:id', (req, res) => {
   const eventId = parseInt(req.params.id);
 
@@ -83,7 +83,51 @@ router.delete('/:id', (req, res) => {
   });
 });
 
-// ✅ Check if a student already joined a specific event
+// Join an event
+router.post('/join/:eventId', (req, res) => {
+  const { eventId } = req.params;
+  const { studentId } = req.body;
+
+  if (!studentId) {
+    return res.status(400).json({ error: 'Missing studentId' });
+  }
+
+  db.query(
+    'INSERT INTO event_attendance (event_id, student_id) VALUES (?, ?)',
+    [eventId, studentId],
+    (err) => {
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).json({ error: 'Already joined' });
+        }
+        console.error('Error joining event:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      res.status(200).json({ message: 'Joined successfully' });
+    }
+  );
+});
+
+// Cancel join (unjoin event)
+router.delete('/unjoin/:eventId/:studentId', (req, res) => {
+  const { eventId, studentId } = req.params;
+
+  db.query(
+    'DELETE FROM event_attendance WHERE event_id = ? AND student_id = ?',
+    [eventId, studentId],
+    (err, result) => {
+      if (err) {
+        console.error('Error cancelling join:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+
+      return res.status(200).json({ message: 'Unjoined successfully' });
+    }
+  );
+});
+
+// Check if a student has joined an event
 router.get('/has-joined/:eventId/:studentId', (req, res) => {
   const { eventId, studentId } = req.params;
 
@@ -101,10 +145,7 @@ router.get('/has-joined/:eventId/:studentId', (req, res) => {
   );
 });
 
-
-
-
-// Get a single event by ID
+// Get single event by ID
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   db.query('SELECT * FROM events WHERE id = ?', [id], (err, results) => {
@@ -113,7 +154,6 @@ router.get('/:id', (req, res) => {
     res.json(results[0]);
   });
 });
-
 
 // Update an event by ID
 router.put('/:id', (req, res) => {
@@ -143,6 +183,5 @@ router.put('/:id', (req, res) => {
     res.status(200).json({ message: 'Event updated successfully' });
   });
 });
-
 
 module.exports = router;

@@ -38,7 +38,7 @@ export default function EventCard({ id, title, date, location, image, descriptio
       window.location.href = `/user-login?redirectTo=${redirectUrl}`;
       return;
     }
-  
+
     try {
       const res = await fetch(`http://localhost:5000/api/events/join/${id}`, {
         method: 'POST',
@@ -47,7 +47,7 @@ export default function EventCard({ id, title, date, location, image, descriptio
         },
         body: JSON.stringify({ studentId }),
       });
-  
+
       if (res.ok) {
         setJoined(true);
       } else {
@@ -58,7 +58,24 @@ export default function EventCard({ id, title, date, location, image, descriptio
       console.error('Error joining event:', err);
     }
   };
-  
+
+  const handleUnjoin = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/events/unjoin/${id}/${studentId}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        setJoined(false);
+      } else {
+        const error = await res.json();
+        alert(error.message);
+      }
+    } catch (err) {
+      console.error('Error cancelling join:', err);
+    }
+  };
+
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this event?')) {
       try {
@@ -85,15 +102,20 @@ export default function EventCard({ id, title, date, location, image, descriptio
         <h2>{title}</h2>
         <span className="event-meta">{formatted} • {location}</span>
         <p>{description}</p>
-  
+
+        {/* Student view */}
         {!isAdmin && !joined && (
           <button className="btn-join" onClick={handleJoin}>Join</button>
         )}
-  
+
         {!isAdmin && joined && (
-          <p style={{ color: 'green', fontWeight: 'bold' }}>You're going!</p>
+          <div className="joined-info">
+            <p style={{ color: 'green', fontWeight: 'bold' }}>You're going!</p>
+            <button className="btn-cancel" onClick={handleUnjoin}>Cancel</button>
+          </div>
         )}
-  
+
+        {/* Admin view */}
         {isAdmin && (
           <div className="event-actions">
             <div className="attendance-left">
@@ -108,5 +130,4 @@ export default function EventCard({ id, title, date, location, image, descriptio
       </div>
     </div>
   );
-  
 }

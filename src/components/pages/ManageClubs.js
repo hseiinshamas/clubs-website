@@ -58,7 +58,11 @@ const ManageClubs = () => {
 
   const handleUpdate = async (id) => {
     try {
-      await axios.put(`http://localhost:5000/api/clubs/${id}`, editedClub);
+      await axios.put(`http://localhost:5000/api/clubs/${id}`, {
+        name: editedClub.name,
+        description: editedClub.description,
+        image: editedClub.image_url,
+      });
       setEditingClubId(null);
       fetchClubs();
     } catch (err) {
@@ -83,7 +87,13 @@ const ManageClubs = () => {
           onChange={(e) => setNewClub({ ...newClub, description: e.target.value })}
         />
         <input type="file" accept="image/*" onChange={(e) => handleImageUpload(e)} />
-        {newClub.image_url && <img src={newClub.image_url} alt="Preview" style={{ width: '100px', marginTop: '10px' }} />}
+        {newClub.image_url && (
+          <img
+            src={newClub.image_url}
+            alt="Preview"
+            style={{ width: '100px', marginTop: '10px' }}
+          />
+        )}
         <button onClick={handleAddClub}>Add Club</button>
       </div>
 
@@ -109,8 +119,10 @@ const ManageClubs = () => {
                     style={{ width: '100px', marginTop: '10px' }}
                   />
                 )}
-                <button onClick={() => handleUpdate(club.id)}>Save</button>
-                <button onClick={() => setEditingClubId(null)}>Cancel</button>
+                <div className="button-group">
+                  <button className="edit-btn" onClick={() => handleUpdate(club.id)}>Save</button>
+                  <button className="delete-btn" onClick={() => setEditingClubId(null)}>Cancel</button>
+                </div>
               </>
             ) : (
               <>
@@ -121,15 +133,22 @@ const ManageClubs = () => {
                 />
                 <h3>{club.name}</h3>
                 <p>{club.description}</p>
-                <button
-                  onClick={() => {
-                    setEditingClubId(club.id);
-                    setEditedClub({ name: club.name, description: club.description, image_url: club.image_url });
-                  }}
-                >
-                  Edit
-                </button>
-                <button onClick={() => handleDelete(club.id)}>Delete</button>
+                <div className="button-group">
+                  <button
+                    className="edit-btn"
+                    onClick={() => {
+                      setEditingClubId(club.id);
+                      setEditedClub({
+                        name: club.name,
+                        description: club.description,
+                        image_url: club.image_url,
+                      });
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button className="delete-btn" onClick={() => handleDelete(club.id)}>Delete</button>
+                </div>
               </>
             )}
           </div>
